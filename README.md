@@ -1,9 +1,9 @@
-EZ-Bake
+EZ Bake
 =====
 
-`EZ Bake` came from an idea I had while watching the [HangOps](https://twitter.com/hangops) [episode 2014-04-11](https://www.youtube.com/watch?v=clLFKIeSADo&feature=youtu.be).  
+`EZ Bake` came from an idea I had while watching the [HangOps](https://twitter.com/hangops) [episode 2014-04-11](https://www.youtube.com/watch?v=clLFKIeSADo&feature=youtu.be) in which they were talking about `Docker` and Config Management being complementary rather than adversary.
 
-EZ bake takes chef solo recipes designed for chef-solo in a tarball via `stdin` and converges a docker node using that recipe.
+EZ Bake takes chef solo recipes designed for chef-solo in a tarball via `stdin` and converges a docker node using that recipe.
 
 In order to recognize and run your cookbook ( or repo ) it needs to contain the following files: `Berksfile`, `solo.json`, 'solo.rb' in the root of your cookbook.   There is some provision for providing different locations for these via environment variables.  See `./ezbake` if you wish to do this.
 
@@ -41,7 +41,21 @@ $ ID=$(tar cf - . | sudo docker run -i -a stdin paulczar/ezbake) \
   && sudo docker attach $ID \
   && sudo docker commit $ID java7 
   && sudo docker rm $ID
+
+Running Berkshelf to collect your cookbooks:
+Installing java (1.22.0) from site: 'http://cookbooks.opscode.com/api/v1/cookbooks'
+Converging your container:
+[2014-04-12T22:10:24+00:00] INFO: Forking chef instance to converge...
+....
+[2014-04-12T22:16:52+00:00] INFO: Chef Run complete in 154.563192281 seconds
+[2014-04-12T22:16:52+00:00] INFO: Running report handlers
+[2014-04-12T22:16:52+00:00] INFO: Report handlers complete
+
 $ sudo docker run -t java7 java -version
+java version "1.7.0_51"
+Java(TM) SE Runtime Environment (build 1.7.0_51-b13)
+Java HotSpot(TM) 64-Bit Server VM (build 24.51-b03, mixed mode)
+
 ```
 
 License
