@@ -1,0 +1,42 @@
+#!/bin/bash
+set -eo pipefail
+
+chef_root=/tmp/repo
+chef_config=${chef_config:-$chef_root/solo.rb}
+chef_json=${chef_json:-$chef_root/solo.json}
+
+tar_args="-xC"
+
+[[ ! -z $gzip ]] && tar_args+="z"
+
+if [[ "$1" == "-" ]]; then
+  cook_file="$1"
+else
+  cook_file=/tmp/slug.tgz
+  if [[ "$1" ]]; then
+    put_url="$1"
+  fi
+fi
+
+mkdir -p $chef_root
+
+function output_redirect() {
+  if [[ "$cook_file" == "-" ]]; then
+    cat - 1>&2
+  else
+    cat -
+  fi
+}
+
+## Load source from STDIN
+
+echo "running tar $tar_args $chef_root"
+cat | tar $tar_args $chef_root
+
+## chef converge
+
+cd $chef_root
+echo "Running Berkshelf to collect your cookbooks:"
+/opt/chef/embedded/bin/berks install --path $chef_root/cookbooks
+echo "Converging your container:"
+chef-solo -c $chef_config -j $chef_json
