@@ -7,8 +7,8 @@
 FROM paulczar/docker-chef-client
 MAINTAINER Paul Czarkowski "paul@paulcz.net"
 
-ADD ezbake /tmp/ezbake
+ADD ezbake /usr/bin/ezbake
 
-RUN chmod +x /tmp/ezbake
+RUN chmod +x /usr/bin/ezbake
 
-CMD ["/tmp/ezbake"]
+CMD ["/usr/bin/ezbake"]
